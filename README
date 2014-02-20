@@ -1,0 +1,153 @@
+HFR_Progs: High Frequency Radar Program Suite
+
+$Id: README 351 2007-03-09 01:31:02Z dmk $
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+More detailed documentation will eventually be available at:
+
+Project webpage: https://cencalarchive.org/~cocmpmb/COCMP-wiki/index.php/Main_Page
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+This suite covers basic processing and analysis of HF Radar data.  It
+is an updated and expanded version of HFRadarmap (by Mike Cook) or
+HFRC (by David Kaplan).  The principal authors of this suite are David
+Kaplan (UCSC), Mike Cook (NPS) and Dan Atwater (UCSC/NPS).
+
+Much of this toolbox is released under the Gnu General Public License,
+the text of which is included with the toolbox at
+HFR_Progs/license.gpl.txt.  In a nutshell, this license says that the
+code may be modified and redistributed freely, provided that all
+modifications to the source code are also made freely available.
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+Installation Quickstart:
+------------------------
+
+These instructions are for suitably configured Unix-like systems
+(e.g., Linux, Mac OSX).
+
+1) Unpack
+
+$ unzip HFR_Progs-VERSION.zip
+
+2) Configure Matlab
+
+$ cd HFR_Progs
+$ make
+$ make all_gshhs
+$ cd matlab
+$ matlab
+MATLAB>> HFRPdemo
+
+3) Configure Perl (if desired)
+
+$ sudo perl -MCPAN -e "install 'MODULE::NAME'"
+
+If using the Perl scripts, at a minimum the following modules are
+necessary: Date::Calc, List::Compare, Net::SSH, Net::SCP,
+Convert::ASN1
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+Installation:
+-------------
+
+1) Unpack the suite in a suitable location
+
+The suite is distributed in a zipped archive.  On unix-like systems,
+this can be expanded by:
+
+$ unzip HFR_Progs-VERSION.zip
+
+This will create a directory called HFR_Progs-VERSION with the suite
+inside.
+
+2) Install the external Matlab packages
+
+The core of this suite is the Matlab functions and scripts.  This code
+depends on several freely available software packages: m_map, openMA,
+t_tide, arrow, mexnc.  All but m_map are to one degree or another
+optional.  These packages can be downloaded off the web and placed in
+the HFR_Progs/matlab/external_matlab_packages directory.
+
+To ease installation of these packages, we have created a Makefile
+that will automatically download and install the packages on suitably
+configured systems.  These systems must have make, wget, tar and unzip
+installed.
+
+Assuming that these packages are installed, one can download and
+install m_map, openMA, t_tide and arrow with:
+
+$ cd HFR_Progs
+$ make
+
+You may also want to use the high definition coastlines with m_map:
+
+$ make all_gshhs
+
+If you want to generate netCDF files for use with Gnome, then you will
+need to install the netCDF package and the mexnc Matlab interface for
+netCDF.  Installing netCDF is fairly straightforward and explained at
+http://www.unidata.ucar.edu/software/netcdf/.  Once installed,
+installing and compiling mexnc may be possible with:
+
+$ make all_mexnc
+$ make compile_mexnc NETCDF=/PATH/TO/NETCDF
+
+This requires a working mex executable.
+
+3) Install Perl modules
+
+Perl may be useful for moving files around and converting some file
+formats.  It is not required for using the Matlab parts of the
+toolbox.
+
+If you wish to use the Perl scripts, then certain Perl modules must be
+installed (it is assumed Perl itself is already installed).  The
+appropriate way to install these packages depends on the system, but
+the following should work on many systems:
+
+$ sudo perl -MCPAN -e "install 'MODULE::NAME'"
+
+or perhaps
+
+$ su
+$ perl -MCPAN -e "install 'MODULE::NAME'"
+
+At a minimum, the following modules are necessary: Date::Calc,
+List::Compare, Net::SSH, Net::SCP, Convert::ASN1
+
+4) Running matlab
+
+To use the Matlab toolbox, the HFR_Progs/matlab directory and most
+subdirectories must be on the Matlab path.  One way to achieve this is
+by starting Matlab from the HFR_Progs/matlab directory.  If Matlab is
+started from another directory, then the following should add the
+appropriate directories (and perform a couple of basic tasks, such as
+initializing the random number generator):
+
+MATLAB>> cd HFR_Progs/matlab
+MATLAB>> startup
+
+After this has been done, you can change to any working directory and
+the toolbox will be available.  You could also modify
+HFR_Progs/matlab/startup.m to fit your needs.
+
+There is a demonstration of the toolbox along with some sample data in
+HFR_Progs/matlab/demo:
+
+MATLAB>> HFRPdemo
+
+We are in the process of writing drivers that automate basic
+processing of HF Radar data.  These can be found in
+HFR_Progs/matlab/drivers.
+
+There are a number of readme files inside the HFR_Progs/matlab
+directory and subdirectories that provide additional information about
+specific aspects of the toolbox.
+
+
