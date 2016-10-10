@@ -213,7 +213,7 @@ vv = cellstr( strparser( vv{1} ) );
 
 % List of columns that really should be present
 II = [];
-cc = { 'LOND', 'LATD', 'RNGE', 'BEAR', 'HEAD', 'VELO' };
+cc = { 'LOND', 'LATD', 'RNGE', 'BEAR', 'HEAD', 'VELO','VFLG' };
 for k = 1:length(cc);
   ii = strmatch( cc{k}, vv, 'exact' );
   if isempty(ii)
@@ -230,6 +230,7 @@ end
 RADIAL.LonLat = Data( :, II(1:2) );
 RADIAL.RangeBearHead = Data( :, II(3:5) );  
 RADIAL.RadComp = Data(:,II(6));
+RADIAL.VectorFlag=Data(:,II(7));% added 20161007 HJR
 
 % Change 999 in any field into NaN - NaN's create massive problems for
 % using error field to calculate totals error.
