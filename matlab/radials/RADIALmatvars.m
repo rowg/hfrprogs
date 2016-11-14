@@ -11,4 +11,4 @@ function mm = RADIALmatvars
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-mm = {'U','V','RadComp','Error','Flag'};
+mm = {'U','V','RadComp','Error','Flag','VectorFlag'};
