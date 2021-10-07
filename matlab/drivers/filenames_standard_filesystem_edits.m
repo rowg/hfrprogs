@@ -1,10 +1,9 @@
-function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,tf)
+function fnames = filenames_standard_filesystem_edits(bd,site,type,ts,mf,tf)
 % FILENAMES_STANDARD_FILESYSTEM - generates a set of filenames in the
 % standard SITES/TYPE/YYYY_MM/ directory hierarchy.
 %
 % Usage: fnames = filenames_standard_filesystem( baseDir, site, type,
-%                                   TimeStamps, monthflag,
-%                                   typeflag )
+%                                   TimeStamps, monthflag, typeflag )
 %
 % Inputs
 % ------
@@ -14,8 +13,6 @@ function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,tf)
 % TimeStamps = an array of time stamps in datenum format
 % monthflag = boolean indicating whether or not to include the YYYY_MM
 %             directory
-% monthseperatorflag = boolean indicating whether a _ or - are used to seperate the
-%            the YYYY and MM
 % typeflag = boolean indicating whether or not to include the type in the
 %            directory (defaults to true)
 % 
@@ -33,7 +30,7 @@ function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,tf)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: filenames_standard_filesystem.m 599 2008-02-11 18:57:28Z cook $
+% 	$Id: filenames_standard_filesystem.m 599 2008-02-11 18:57:28Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL (Gnu Public License)
@@ -73,11 +70,9 @@ suffix = type;
 for k = 1:numel(suffix)
   switch upper(type{k}(1:3))
     case 'RDL'
-      suffix{k} = '.ruv';
+      suffix{k} = '.hfrss10lluv'; % .hfrweralluv1.0
     case 'ELT'
       suffix{k} = '.euv';
-    case 'QCV'
-      suffix{k} = '.qcv'; 
     otherwise
       KKK = true;
       suffix{k} = '.ruv';

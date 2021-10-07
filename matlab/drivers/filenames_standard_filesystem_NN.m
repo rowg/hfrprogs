@@ -1,9 +1,9 @@
-function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,tf)
+function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,msf,tf)
 % FILENAMES_STANDARD_FILESYSTEM - generates a set of filenames in the
 % standard SITES/TYPE/YYYY_MM/ directory hierarchy.
 %
 % Usage: fnames = filenames_standard_filesystem( baseDir, site, type,
-%                                   TimeStamps, monthflag,
+%                                   TimeStamps, monthflag, ,monthseperatorflag
 %                                   typeflag )
 %
 % Inputs
@@ -33,7 +33,7 @@ function fnames = filenames_standard_filesystem(bd,site,type,ts,mf,tf)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: filenames_standard_filesystem.m 599 2008-02-11 18:57:28Z cook $
+% 	$Id: filenames_standard_filesystem.m 599 2008-02-11 18:57:28Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL (Gnu Public License)
@@ -73,11 +73,9 @@ suffix = type;
 for k = 1:numel(suffix)
   switch upper(type{k}(1:3))
     case 'RDL'
-      suffix{k} = '.ruv';
+      suffix{k} = '.hfrss10lluv';
     case 'ELT'
       suffix{k} = '.euv';
-    case 'QCV'
-      suffix{k} = '.qcv'; 
     otherwise
       KKK = true;
       suffix{k} = '.ruv';
@@ -88,5 +86,5 @@ if KKK
 end
 
 % Form full filenames
-fnames = datenum_to_directory_filename( basedir, ts, prefix, suffix, mf );
+fnames = datenum_to_directory_filename( basedir, ts, prefix, suffix, mf,msf );
 fnames = reshape( fnames, s );

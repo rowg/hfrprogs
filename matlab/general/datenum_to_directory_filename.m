@@ -7,7 +7,7 @@ function [dns,fns] = datenum_to_directory_filename( p, dn, pre, post, month_dir 
 %
 % USAGE_1: fullfilenames = datenum_to_directory_filename( base_dir, datenums,
 %                                       filename_prefix, filename_postfix
-%                                       include_month_dir );
+%                                       include_month_dir,);
 %
 % Example: datenum_to_directory_filename( 'Data/Totals/tuv',
 %                                       [732678,732679], 'tuv_', '.mat'

@@ -28,6 +28,7 @@ function dns = datenum_to_directory( p, dn )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 dn = datevec( dn(:) );
+
 s = strcat( num2str(dn(:,1),'%04d'), '_', num2str(dn(:,2),'%02d') );
 
 dns = fullfile_multiple( p, s );

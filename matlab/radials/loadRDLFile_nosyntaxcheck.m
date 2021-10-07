@@ -130,24 +130,9 @@ RADIAL.ProcessingSteps{end+1} = mfilename;
 %ws=warning('query','getNameValuePair:MULT_MATCHES' );
 %warning off getNameValuePair:MULT_MATCHES
 
-% FileType
-[ii,nn,vv] = getNameValuePair( 'FileType', names, values, 'exact' );
-if isempty(ii) | isempty(vv{1})
-  feval( warnfunc, [ mfilename ':NO_FILETYPE' ], ...
-         'Could not find FileType in header. Returning empty structure.' ...
-         );  
-  return
-end
-if isempty(strfind(vv{1},'LLUV'))
-    feval( warnfunc, [ mfilename ':INVALID_FILETYPE' ], ...
-         'Invalid FileType in header. Only LLUV accepted. Returning empty structure.' ...
-         );  
-  return
-end
-
 % TimeStamp
 [ii,nn,vv] = getNameValuePair( 'TimeStamp', names, values, 'exact' );
-if isempty(ii) | isempty(vv{1})
+if isempty(ii)
   feval( warnfunc, [ mfilename ':NO_TIMESTAMP' ], ...
          'Could not find TimeStamp in header. Returning empty structure.' ...
          );  
@@ -159,58 +144,32 @@ end
 % TimeZone - as an offset from GMT
 [ii,nn,vv] = getNameValuePair( 'TimeZone', names, values, 'exact' );
 if isempty(names), keyboard, end
-if isempty(ii) | isempty(vv{1})
+if isempty(ii)
   feval( warnfunc, [ mfilename ':NO_TIMEZONE' ], ...
-         'Could not find TimeZone in header. Returning empty structure.' ); 
-  return
+         'Could not find TimeZone in header' ); 
+  RADIAL.TimeZone = 'UNKNOWN';
 else
   vv = cellstr(strparser( vv{1} ));
-  if isempty(strfind(vv{1},'GMT')) & isempty(strfind(vv{1},'UTC'))
-    feval( warnfunc, [ mfilename ':INVALID_TIMEZONE' ], ...
-         'Invalid TimeZone in header. Only GMT or UTC accepted. Returning empty structure.' ...
-         );  
-    return
-  end
-  try
-      gmtplus=str2double(vv{2});
-      if gmtplus~=0
-          feval( warnfunc, [ mfilename ':INVALID_TIMEZONE' ], ...
-              'Invalid TimeZone in header. Only GMT or UTC accepted. Returning empty structure.' ...
-              );
-          return
-      end
-  catch
-      feval( warnfunc, [ mfilename ':INVALID_TIMEZONE' ], ...
-          'Invalid TimeZone in header. Only GMT or UTC accepted. Returning empty structure.' ...
-          );
-      return
-  end
   RADIAL.TimeZone = [ 'GMT' vv{2} ];
 end
 
 % Origin
 [ii,nn,vv] = getNameValuePair( 'Origin', names, values, 'exact' );
-if isempty(ii) | isempty(vv{1})
+if isempty(ii)
   feval( warnfunc, [ mfilename ':NO_SITEORIGIN' ], ...
-         'Could not find Origin in header. Returning empty structure.' ); 
-  return
+         'Could not find Origin in header' ); 
+  RADIAL.SiteOrigin = [ NaN, NaN ];
 else
   vv = str2num( vv{1} );
-  if vv(2)<-180 | vv(2)>360 | abs(vv(1))>90
-      feval( warnfunc, [ mfilename ':INVALID_SITEORIGIN' ], ...
-          'Invalid Origin in header. Must be [lat lon], -90<lat<90 and -180<lon<-180. Returning empty structure.' ...
-          );
-      return
-  end
   RADIAL.SiteOrigin = vv([2,1]); % Given Lat,Lon, change to Lon,Lat
 end
 
 % Site
 [ii,nn,vv] = getNameValuePair( 'Site', names, values, 'exact' );
-if isempty(ii) | isempty(vv{1})
+if isempty(ii)
   feval( warnfunc, [ mfilename ':NO_SITENAME' ], ...
-         'Could not find Site in header. Returning empty structure' ); 
-  return
+         'Could not find Site in header' ); 
+  RADIAL.SiteName = 'UNKNOWN';
 else
   vv = cellstr(strparser( vv{1} ));
   RADIAL.SiteName = vv{1};
@@ -218,14 +177,10 @@ end
 
 % PatternType
 [ii,nn,vv] = getNameValuePair( 'PatternType', names, values, 'exact' );
-if isempty(ii) | isempty(vv{1})
+if isempty(ii)
   feval( warnfunc, [ mfilename ':NO_PATTERNTYPE' ], ...
-         'Could not find PatternType in header. Returning empty structure.' );
-  return
-elseif ~ismember(vv{1},{'Measured','Ideal'})
-    feval( warnfunc, [ mfilename ':INVALID_PATTERNTYPE' ], ...
-         'Invalid PatternType in header. Must be ''Measured'' or ''Ideal''. Returning empty structure.' );
-  return
+         'Could not find PatternType in header' );
+  RADIAL.Type = 'UNKNOWN';
 else
   RADIAL.Type = [ 'RDL' vv{1} ];
 end

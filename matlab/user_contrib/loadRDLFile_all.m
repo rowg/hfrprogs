@@ -1,4 +1,4 @@
-function RADIAL = loadRDLFile(filename, saverawdata, warnfunc )
+function RADIAL = loadRDLFile_all(filename, saverawdata, warnfunc )
 % LOADRDLFILE  Loads an RDL file into a RADIAL structure
 %
 % Usage: RADIAL = loadRDLFile( filename, saverawdata, warnfunc )
@@ -59,7 +59,18 @@ if isa(filename,'cell')
   for k = 1:length(filename)
     n = RADIAL(k).SiteCode;
     
-    RADIAL(k) = loadRDLFile( filename{k}, saverawdata, warnfunc );
+    newRad = loadRDLFile_all( filename{k}, saverawdata, warnfunc );
+    newfields=setdiff(fieldnames(newRad),fieldnames(RADIAL));
+    for nf=1:length(newfields)
+        for nr=1:length(RADIAL)
+            RADIAL(nr).(newfields{nf})=[];
+        end
+    end
+    newfields=setdiff(fieldnames(RADIAL),fieldnames(newRad));
+    for nf=1:length(newfields)
+        newRad.(newfields{nf})=[];
+    end
+    RADIAL(k) = newRad;
     RADIAL(k).SiteCode = n;
   end
   return
@@ -271,6 +282,7 @@ for k = 1:length(cc);
   end
 end
 
+
 % Get pieces of data we want if they are not empty.
 RADIAL.LonLat = Data( :, II(1:2) );
 RADIAL.RangeBearHead = Data( :, II(3:5) );  
@@ -320,6 +332,12 @@ end
 for m = RADIALmatvars
   m = m{:};
   RADIAL.(m)( RADIAL.(m) == 999 ) = NaN;
+end
+
+cc_leftovers = setdiff(vv,[cc,{'VELU','VELV','ETMP','STDV'}]);
+for m=1:length(cc_leftovers)
+    II = strmatch( cc_leftovers{m}, vv, 'exact' );
+    RADIAL.(cc_leftovers{m}) = Data(:,II);
 end
 
 % Add currently unused Flag (1 is for original radials).

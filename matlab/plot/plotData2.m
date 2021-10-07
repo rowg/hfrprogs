@@ -63,7 +63,7 @@ function [h,ts] = plotData( T, pfunc, varargin )
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: plotData.m 682 2008-09-24 08:47:29Z dmk $
+% 	$Id: plotData.m 682 2008-09-24 08:47:29Z dmk $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL (Gnu Public License)
@@ -97,11 +97,6 @@ switch pfunc
     varargin = varargin(2:end);    
     
     p = 100 * sum( isfinite(T.U+T.V), 2 ) / size(T.U,2);
-
-    %% find the grid points where the coverage is zero ans replace with NaNs
-    ind=p==0;
-    p(ind)=NaN;
-    
     [h,ts] = colordot( T.LonLat(:,1),T.LonLat(:,2),p,clim,pfunc, ...
                        varargin{:});
     return
@@ -139,7 +134,7 @@ V = V(gg);
 
 % Busy work before multiplying by scale factor
 switch pfunc
-  case 'm_vec'
+  case {'m_vec','m_vec_same'}
     % Get magnitude for coloring
     mm = cart2magn( U, V );
   case {'quiver','arrow','m_arrow'}
@@ -149,7 +144,7 @@ switch pfunc
 end
 
 % Multiple by scale factor
-[U,V] = deal( U * scale, V * scale );
+%[U,V] = deal( U * scale, V * scale );
 
 % Do plotting of vectors
 if ~isempty(LL)
@@ -158,6 +153,12 @@ if ~isempty(LL)
       h = feval( pfunc, LL(:,1), LL(:,2), U, V, 0, varargin{:} );
     case 'm_vec'
       h = m_vec( 1, LL(:,1), LL(:,2), U, V, mm, varargin{:} );
+    case 'm_vec_same'
+      vector=U+sqrt(-1)*V;
+      vector=vector./mm;
+      U=real(vector);
+      V=imag(vector);
+      h = m_vec( 10, LL(:,1), LL(:,2), U, V, mm, varargin{:} );
     case {'arrow','m_arrow'}
     h = feval( pfunc, LL, LL + [U,V], varargin{:} );
     otherwise

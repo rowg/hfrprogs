@@ -11,4 +11,5 @@ function mm = RADIALmatvars
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-mm = {'U','V','RadComp','Error','Flag'};
+% Added VectorFlag string 20170215 HJR
+mm = {'U','V','RadComp','Error','Flag','VectorFlag'};
