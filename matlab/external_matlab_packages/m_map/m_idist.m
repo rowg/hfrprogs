@@ -73,17 +73,25 @@ function [s,a12,a21] = m_idist(lon1,lat1,lon2,lat2,spheroid)
 %            above in (9).
 %       (12) No warranties; use at your own risk.
 %
-%  R. Pawlowicz
+%  R. Pawlowicz (rich@ocgy.ubc.ca)
+%
+% This software is provided "as is" without warranty of any kind. But
+% it's mine, so you can't sell it.
+%
 %   9/jan/2005  - changed name, altered inputs to m_map style (lon first),
 %                added ellipses, many minor simplifications to tighten code.
-
+%   9/apr/2009  - distances was NaN if start and end points are the same,
+%                 and I have fixed this.
+%   12/May/2014 - my fix didn't work for arrays. Mike Casey suggested a fix for
+%                 this fix.
+% 11/Feb/20 -  transcription error in grs67 flattening fixed (thanks G. Etienne)
 
 pi180=pi/180;
 
 MAP_ELLIP = struct ( 'normal', [1.0, 0], ...
     'sphere', [6370997.0, 0], ...
     'grs80' , [6378137.0, 1/298.257], ...
-    'grs67' , [6378160.0, 1/247.247], ...
+    'grs67' , [6378160.0, 1/298.247], ...
     'wgs84' , [6378137.0, 1/298.257223563],  ...
     'wgs72' , [6378135.0, 1/298.260], ...
     'wgs66' , [6378145.0, 1/298.250], ...
@@ -94,14 +102,14 @@ MAP_ELLIP = struct ( 'normal', [1.0, 0], ...
     'intl67', [6378157.5, 1/298.250]);
 
 
-if nargin<5,
+if nargin<5
   spheroid='wgs84';
-end;
+end
 ellip=getfield(MAP_ELLIP,spheroid); 
-if length(ellip)~=2,
+if length(ellip)~=2
  disp(MAP_ELLIP);
  error('Spheroid not chosen from above list');
-end;
+end
 
 
 % Do the equivalent of meshgrid-type calls to make all
@@ -110,18 +118,18 @@ end;
 % of these has to be a '1'.
 allsize=[size(lon1);size(lat1);size(lon2);size(lat2)];
 i1=ones(1,size(allsize,2));
-for k=1:size(allsize,2),
+for k=1:size(allsize,2)
  rs=unique(allsize(:,k));
- if length(rs)==2 & rs(1)==1,
+ if length(rs)==2 && rs(1)==1
    j1=i1;j1(k)=rs(2);
-   if allsize(1,k)==1,lon1=repmat(lon1,j1); end;
-   if allsize(2,k)==1,lat1=repmat(lat1,j1); end;
-   if allsize(3,k)==1,lon2=repmat(lon2,j1); end;
-   if allsize(4,k)==1,lat2=repmat(lat2,j1); end;
- elseif length(rs)>2,
+   if allsize(1,k)==1,lon1=repmat(lon1,j1); end
+   if allsize(2,k)==1,lat1=repmat(lat1,j1); end
+   if allsize(3,k)==1,lon2=repmat(lon2,j1); end
+   if allsize(4,k)==1,lat2=repmat(lat2,j1); end
+ elseif length(rs)>2
   error('incompatible array sizes!');  
- end;
-end;
+ end
+end
  
 % reshape inputs
 keepsize = size(lat1);
@@ -139,7 +147,7 @@ end
 
 % correct for errors at exact poles by adjusting 0.6 millimeters:
 kidx = abs(90-abs(lat1)) < 1e-10;
-if any(kidx);
+if any(kidx)
     lat1(kidx) = sign(lat1(kidx))*(90-(1e-10));
 end
 kidx = abs(90-abs(lat2)) < 1e-10;
@@ -170,9 +178,9 @@ cossigma=lambdaold;
 sigma = lambdaold;
 cos2sigmam = lambdaold;
 C = lambdaold;
-k = logical(ones(size(lat1)));
+k = true(size(lat1));
 itercount = 0;
-warninggiven = logical(0);
+warninggiven = false;
 while any(k)  % force at least one execution
     itercount = itercount+1;
     if itercount > 50
@@ -189,6 +197,8 @@ while any(k)  % force at least one execution
     cossigma(k) = real(  sin(U1(k)).*sin(U2(k))+cos(U1(k)).*cos(U2(k)).*cos(lambda(k))  );
     sigma(k) = atan2(sinsigma(k),cossigma(k));
     alpha(k) = asin(cos(U1(k)).*cos(U2(k)).*sin(lambda(k))./sinsigma(k));
+%%    if isnan(alpha(k)), alpha(k)=0; end; % this occurs when points are colocated (RP 9/apr/09)
+    alpha(isnan(alpha(k)))=0;     % Fix for above line - Thanks to M. Casey
     cos2sigmam(k) = cossigma(k)-2*sin(U1(k)).*sin(U2(k))./cos(alpha(k)).^2;
     C(k) = f/16*cos(alpha(k)).^2.*(4+f*(4-3*cos(alpha(k)).^2));
     lambdaold(k) = lambda(k);
@@ -201,7 +211,7 @@ while any(k)  % force at least one execution
     if any(lambda(k) > pi)
         warning(['Essentially antipodal points encountered. ' ...
             'Precision may be reduced slightly.']);
-        warninggiven = logical(1);
+        warninggiven = true;
         lambdaold(lambda>pi) = pi;
         lambda(lambda>pi) = pi;
     end
