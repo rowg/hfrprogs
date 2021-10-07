@@ -16,9 +16,6 @@
  
 FILESEP=/
 
-# The netcdf location can be overridden by environmental variables.
-# Make sure to set this correctly before compiling mexnc
-NETCDF?=/usr
 
 # Directories
 INSTALLDIR=.
@@ -41,6 +38,7 @@ CD ?= cd
 CP ?= cp
 MAKE ?= make
 ECHO ?= echo
+MV ?= mv
 
 
 # This variable contains a list of targets - separate by whitespace -
@@ -177,7 +175,7 @@ clean_files_arrow:
 #       needs to be called with a separate "make all_gshhs"
 ##################################################
 GSHHS_DIR=$(M_MAPDIR)$(FILESEP)private
-GSHHS_PACKAGE=$(EXTERNALMATLABDIR)$(FILESEP)gshhs_1.10.zip
+GSHHS_PACKAGE=$(EXTERNALMATLABDIR)$(FILESEP)gshhs_1.3.zip
 
 all_gshhs: download_gshhs unpack_gshhs
 clean_gshhs: clean_package_gshhs clean_files_gshhs
@@ -185,7 +183,7 @@ clean_gshhs: clean_package_gshhs clean_files_gshhs
 download_gshhs: $(GSHHS_PACKAGE)
 $(GSHHS_PACKAGE):
 	[ -e $(GSHHS_PACKAGE) ] || \
-	$(WGET) http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.10/gshhs_1.10.zip  -P $(EXTERNALMATLABDIR)
+	$(WGET) http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/oldversions/version1.5/gshhs_1.3.zip  -P $(EXTERNALMATLABDIR)
 
 unpack_gshhs: $(GSHHS_PACKAGE) $(M_MAPDIR)
 	$(UNZIP) $(GSHHS_PACKAGE) -d $(GSHHS_DIR)$(FILESEP)
@@ -247,6 +245,8 @@ clean_files_SandBath:
 #       below my need to be updated frequently.
 #       See the download page for more information, at:
 #       http://mexcdf.sourceforge.net/index.html
+#
+# This downloads the precompiled binary for Mac INTEL processors
 ##################################################
 MEXNCDIR=$(EXTERNALMATLABDIR)$(FILESEP)mexnc
 MEXNCPACKAGE=$(EXTERNALMATLABDIR)$(FILESEP)mexnc.R2007b-2.0.29.tar.gz
@@ -274,17 +274,41 @@ clean_files_mexnc:
 	-$(RM) -Rf $(MEXNCDIR)
 
 ##################################################
-# This tries to compile mexnc library.  Probably don't have to do this
-# if you have a common os (mac OS X or windohz, not sure about linux)
-# NETCDF variable must be set to location of library for this to work.
+# mexnc stuff - not done by default - call with a separate "make all_mexpp"
+# NOTE: for netcdf to work you need to dowload the mexnc stuff AND
+# the netcdf toolbox.  Neither is done by default.  
+#
+# NOTE: This downloads and unpacks mexnc, but doesn't try to compile it.  
+#       you shouldn't if you have a mac or pc running windows, not sure about linux.
+#       This download seems to be updated frequently, and therefore the file
+#       below my need to be updated frequently.
+#       See the download page for more information, at:
+#       http://mexcdf.sourceforge.net/index.html
+#
+# This downloads the precompiled binary for the older Mac PPC processors
 ##################################################
-# This command creates a version of NETCDF variable with slashes protected.
-NETCDFFIX=$(shell $(ECHO) $(NETCDF) | $(SED) 's/\//\\\//g')
+MEXPPDIR=$(EXTERNALMATLABDIR)$(FILESEP)mexpp
+MEXPPPACKAGE=$(EXTERNALMATLABDIR)$(FILESEP)mexnc.R2006b-2.0.29-2.tar.gz
 
-compile_mexnc: $(MEXNCDIR) 
-	$(CD) $(MEXNCDIR); $(CP) mexopts.sh mexopts.sh.orig
-	$(CD) $(MEXNCDIR); $(SED) 's/NETCDF="[^"]*"/NETCDF="$(NETCDFFIX)"/' mexopts.sh.orig > mexopts.sh
-	$(CD) $(MEXNCDIR); $(MAKE)
+all_mexpp: download_mexpp unpack_mexpp
+clean_mexpp: clean_package_mexpp clean_files_mexpp
+
+download_mexpp: $(MEXPPPACKAGE)
+$(MEXPPPACKAGE):
+	[ -e $(MEXPPPACKAGE) ] || \
+	$(WGET) http://superb-east.dl.sourceforge.net/sourceforge/mexcdf/mexnc.R2006b-2.0.29-2.tar.gz -P $(EXTERNALMATLABDIR)
+
+unpack_mexpp: $(MEXPPDIR)
+$(MEXPPDIR): $(MEXPPPACKAGE) 
+	$(TAR) -zxvf $(MEXPPPACKAGE) -C $(EXTERNALMATLABDIR)
+	$(MV) $(EXTERNALMATLABDIR)$(FILESEP)mexnc $(MEXPPDIR)
+	$(TOUCH) $(MEXPPDIR) # Touching directory makes it newer than .tar.gz
+
+clean_package_mexpp:
+	-$(RM) $(MEXPPPACKAGE)
+
+clean_files_mexpp:
+	-$(RM) -Rf $(MEXPPDIR)
 
 ##################################################
 # Chuck Denham's matlab netcdf toolbox - not done by default - call with a 

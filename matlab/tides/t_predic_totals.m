@@ -32,7 +32,7 @@ function Tt = t_predic_totals( t, LonLat, ts, nodal, varargin )
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: t_predic_totals.m 396 2007-04-02 16:56:29Z mcook $	
+% 	$Id: t_predic_totals.m 683 2008-10-02 20:06:42Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL
@@ -62,7 +62,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tide prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-xx = t_predic_matrix( t, ts, varg{:}, varargin{:} )';
+xx = t_predic_matrix( t, ts, varg{:}, varargin{:} ).'; % UNconjugated transpose!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Generate TUV structure and fill

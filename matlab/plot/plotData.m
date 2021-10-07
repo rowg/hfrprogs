@@ -63,7 +63,7 @@ function [h,ts] = plotData( T, pfunc, varargin )
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: plotData.m 396 2007-04-02 16:56:29Z mcook $	
+% 	$Id: plotData.m 682 2008-09-24 08:47:29Z dmk $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL (Gnu Public License)
@@ -147,13 +147,17 @@ end
 [U,V] = deal( U * scale, V * scale );
 
 % Do plotting of vectors
-switch pfunc
-  case {'quiver','m_quiver'}
-    h = feval( pfunc, LL(:,1), LL(:,2), U, V, 0, varargin{:} );
-  case 'm_vec'
-    h = m_vec( 1, LL(:,1), LL(:,2), U, V, mm, varargin{:} );
-  case {'arrow','m_arrow'}
+if ~isempty(LL)
+  switch pfunc
+    case {'quiver','m_quiver'}
+      h = feval( pfunc, LL(:,1), LL(:,2), U, V, 0, varargin{:} );
+    case 'm_vec'
+      h = m_vec( 1, LL(:,1), LL(:,2), U, V, mm, varargin{:} );
+    case {'arrow','m_arrow'}
     h = feval( pfunc, LL, LL + [U,V], varargin{:} );
-  otherwise
-    h = feval( pfunc, LL(:,1), LL(:,2), U, V, varargin{:} );
+    otherwise
+      h = feval( pfunc, LL(:,1), LL(:,2), U, V, varargin{:} );
+  end
+else
+  h = [];
 end

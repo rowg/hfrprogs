@@ -30,7 +30,7 @@ function Tt = t_predic_OMA( t, interp_fn, ts, varargin )
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: t_predic_OMA.m 519 2007-12-11 10:18:36Z dmk $	
+% 	$Id: t_predic_OMA.m 683 2008-10-02 20:06:42Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL
@@ -49,7 +49,7 @@ g = load( interp_fn, 'ux_interp_grid', 'uy_interp_grid', 'gridLonLat' );
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tide prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-alpha = t_predic_matrix( t, ts, varargin{:} )';
+alpha = t_predic_matrix( t, ts, varargin{:} ).'; % UNconjugated transpose!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Generate TUV structure and fill

@@ -40,7 +40,7 @@ function [ tstruct, Tt, Tnt ] = t_tide_totals( T, min_data, nodal, varargin )
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: t_tide_totals.m 396 2007-04-02 16:56:29Z mcook $	
+% 	$Id: t_tide_totals.m 683 2008-10-02 20:06:42Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL
@@ -81,7 +81,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Data to be tided
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-U = (T.U + i * T.V)'; % Transpose so rows are time
+U = (T.U + i * T.V).'; % UNconjugated Transpose so rows are time
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tide analysis
@@ -98,8 +98,8 @@ if nargout > 1
   T.OtherMetadata.(mfilename).varargin = varargin;
   
   Tt = T;
-  Tt.U = real( xx )';
-  Tt.V = imag( xx )';
+  Tt.U = real( xx ).';
+  Tt.V = imag( xx ).';
   
   Tt.OtherMetadata.(mfilename).Type = 'tide';
 end

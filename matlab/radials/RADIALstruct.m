@@ -43,7 +43,6 @@ R.RangeBearHead = zeros(0,3);
 R.RadComp = [];
 R.Error = [];
 R.Flag = [];
-R.VectorFlag=[];% added 20161007_HJR
 R.U = []; % These are purely for convenience, not calculations
 R.V = []; % These are purely for convenience, not calculations
 

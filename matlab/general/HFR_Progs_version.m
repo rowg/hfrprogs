@@ -8,12 +8,12 @@ function [n,s] = HFR_Progs_version
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% 	$Id: HFR_Progs_version.m 679 2008-09-05 18:35:34Z cook $	
+% 	$Id: HFR_Progs_version.m 681 2008-09-18 17:40:33Z cook $	
 %
 % Copyright (C) 2007 David M. Kaplan
 % Licence: GPL (Gnu Public License)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-n = 2.1;
-s = '2.1.2 - $Id: HFR_Progs_version.m 679 2008-09-05 18:35:34Z cook $';
+n = 2.12;
+s = '2.1.2 - $Id: HFR_Progs_version.m 681 2008-09-18 17:40:33Z cook $';
